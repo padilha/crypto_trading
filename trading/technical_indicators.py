@@ -33,7 +33,7 @@ class DualMovingAverageCrossover(TechnicalIndicator):
         long_ma = df['Close'].rolling(self.long_window).mean().dropna()
         short_ma = df['Close'].rolling(self.short_window).mean().dropna()
         short_ma = short_ma.reindex(long_ma.index)
-        return (short_ma > long_ma).fillna(0.0).astype(int)
+        return (short_ma > long_ma).fillna(0).astype(int)
 
 
 class MovingAverageConvergenceDivergence(TechnicalIndicator):
@@ -45,8 +45,8 @@ class MovingAverageConvergenceDivergence(TechnicalIndicator):
         self.sign_window = sign_window
     
     def signals(self, df):
-        macd_series = ta.trend.macd_diff(df['Close'], self.long_window, self.short_window, self.sign_window)
-        return (macd_series > 0).dropna().astype(int)
+        macd = ta.trend.macd_diff(df['Close'], self.long_window, self.short_window, self.sign_window)
+        return (macd > 0).dropna().astype(int)
 
 
 class RelativeStrengthIndex(TechnicalIndicator):
@@ -65,10 +65,10 @@ class RelativeStrengthIndex(TechnicalIndicator):
         df = df.dropna()
         
         df['signal'] = np.nan
-        df.loc[(df['rsi'] > self.oversold_thr) & (df['lagged_rsi'] <= self.oversold_thr), 'signal'] = 1.0
-        df.loc[(df['rsi'] < self.overbought_thr) & (df['lagged_rsi'] >= self.overbought_thr), 'signal'] = 0.0
+        df.loc[(df['rsi'] > self.oversold_thr) & (df['lagged_rsi'] <= self.oversold_thr), 'signal'] = 1
+        df.loc[(df['rsi'] < self.overbought_thr) & (df['lagged_rsi'] >= self.overbought_thr), 'signal'] = 0
         
-        return df['signal'].fillna(method='ffill').fillna(0.0).astype(int)
+        return df['signal'].fillna(method='ffill').fillna(0).astype(int)
 
 
 class RateOfChange(TechnicalIndicator):

@@ -12,8 +12,8 @@ class Backtest(object):
     
     def run(self):
         result = [1.0]
-        last_signal = 0
-        returns = self.price_series / self.price_series.shift(1)
+        last_signal = 0 # starting out of the market
+        returns = self.price_series / self.price_series.shift(1) # returns centered around 1, easier to calculate compound returns
         
         for i in range(len(self.price_series)):
             if i > 0:
